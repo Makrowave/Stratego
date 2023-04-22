@@ -23,6 +23,6 @@ public class WskaznikWyniku extends JPanel {
         if(gracz==1)
             gracz1.setText("GRACZ 1: " + wynik);
         if(gracz==2)
-            gracz2.setText("GRACZ 1: " + wynik);
+            gracz2.setText("GRACZ 2: " + wynik);
     }
 }

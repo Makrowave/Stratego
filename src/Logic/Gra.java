@@ -15,20 +15,31 @@ public class Gra {
         return tura==gracz;
     }
     public void nastepnaTura() {
-        liczPunkty(tura);
         if(tura==Plansza.Wlasciciel.GRACZ1)
             tura = Plansza.Wlasciciel.GRACZ2;
         else
             tura = Plansza.Wlasciciel.GRACZ1;
     }
-    private void liczPunkty(Plansza.Wlasciciel gracz) {
+    public int liczPunkty(Plansza.Wlasciciel gracz) {
         //Rows
-        short ciag = 0;
+        int punkty = 0;
+        boolean ciag = false;
         for(int i=0; i<ROZMIAR; i++) {
-            for(int j=0; j<ROZMIAR; j++) {
-                if(plansza.pobierzWlasiciela(i, j)==gracz)
-                    ciag++;
+            for(int j=0; j<ROZMIAR-1; j++) {
+                if(plansza.pobierzWlasiciela(i, j)==gracz &&
+                        plansza.pobierzWlasiciela(i, j+1)==gracz) {
+                    ciag = true;
+                    punkty++;
+                    if(j==5)
+                        punkty++;
+                }
+                else if(ciag) {
+                    ciag=false;
+                    punkty++;
+                }
             }
+            ciag=false;
         }
+        return punkty;
     }
 }

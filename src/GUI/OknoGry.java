@@ -68,11 +68,13 @@ public class OknoGry extends JFrame implements ActionListener {
         if(gra.pobierzPlansze().pobierzWlasiciela(x, y) == Plansza.Wlasciciel.NIKT) {
              if(gra.czyTura(Plansza.Wlasciciel.GRACZ1)) {
                  gra.pobierzPlansze().ustawWlasciciela(Plansza.Wlasciciel.GRACZ1, x, y);
+                 wynik.ustawWynik(1, gra.liczPunkty(Plansza.Wlasciciel.GRACZ1));
              }
              else {
                  gra.pobierzPlansze().ustawWlasciciela(Plansza.Wlasciciel.GRACZ2, x, y);
+                 wynik.ustawWynik(2, gra.liczPunkty(Plansza.Wlasciciel.GRACZ2));
              }
-            gra.nastepnaTura();
+             gra.nastepnaTura();
         }
     }
     private void ustawKolor(int x, int y) {
