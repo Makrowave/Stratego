@@ -12,13 +12,23 @@ public class OknoGry extends JFrame implements ActionListener {
 
     private int ROZMIAR = 7;
     private Gra gra;
+    private JPanel PLANSZA = new JPanel(new GridLayout(ROZMIAR, ROZMIAR));
     JButton[][] guziki;
+    private WskaznikWyniku wynik = new WskaznikWyniku();
     public OknoGry() {
-        this.setSize(600, 600);
+        this.setSize(700, 700);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setLayout(new BorderLayout());
+        this.add(wynik, BorderLayout.NORTH);
+        //wynik.setBounds(0, 0, 200, 30);
+        stworzPlansze();
+        //PLANSZA.setSize(900, 900);
+        PLANSZA.setBounds(0, 30, 600, 600);
+        this.add(PLANSZA, BorderLayout.CENTER);
         this.setVisible(true);
         gra = new Gra(ROZMIAR);
-        stworzPlansze();
+        //this.pack();
+
     }
 
     private void stworzPlansze() {
@@ -26,15 +36,14 @@ public class OknoGry extends JFrame implements ActionListener {
         int rozmiarPola = 70;
         int przerwa = 4;
         int x=0;
-        int y=0;
+        int y=50;
         for(int i=0; i<ROZMIAR; i++) {
             for(int j=0; j<ROZMIAR; j++) {
                 guziki[i][j] = new JButton();
                 guziki[i][j].setBounds(x, y, rozmiarPola, rozmiarPola);
-                add(guziki[i][j]);
+                PLANSZA.add(guziki[i][j]);
                 guziki[i][j].addActionListener(this);
                 guziki[i][j].setBackground(Color.WHITE);
-                //System.out.println(guziki[i][j].getWidth() + " " + guziki[i][j].getHeight());
                 x+=rozmiarPola+przerwa;
             }
             x=0;
@@ -50,14 +59,14 @@ public class OknoGry extends JFrame implements ActionListener {
                 if(e.getSource()==guziki[i][j]) {
                     wykonajTure(i, j);
                     ustawKolor(i, j);
-                    System.out.println("Tura: " + gra.czyTura(Gra.Tura.GRACZ1));
+                    System.out.println("Tura: " + gra.czyTura(Plansza.Wlasciciel.GRACZ1));
                 }
             }
         }
     }
     private void wykonajTure(int x, int y) {
         if(gra.pobierzPlansze().pobierzWlasiciela(x, y) == Plansza.Wlasciciel.NIKT) {
-             if(gra.czyTura(Gra.Tura.GRACZ1)) {
+             if(gra.czyTura(Plansza.Wlasciciel.GRACZ1)) {
                  gra.pobierzPlansze().ustawWlasciciela(Plansza.Wlasciciel.GRACZ1, x, y);
              }
              else {

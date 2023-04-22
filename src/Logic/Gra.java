@@ -1,12 +1,9 @@
 package Logic;
 
 public class Gra {
-    public enum Tura {
-        GRACZ1, GRACZ2
-    }
     private final Plansza plansza;
     private final int ROZMIAR;
-    private Tura tura;
+    private Plansza.Wlasciciel tura;
     public Gra(int pRozmiar) {
         ROZMIAR = pRozmiar;
         plansza = new Plansza(ROZMIAR);
@@ -14,13 +11,24 @@ public class Gra {
     public Plansza pobierzPlansze() {
         return plansza;
     }
-    public boolean czyTura(Tura gracz) {
+    public boolean czyTura(Plansza.Wlasciciel gracz) {
         return tura==gracz;
     }
     public void nastepnaTura() {
-        if(tura==Tura.GRACZ1)
-            tura = Tura.GRACZ2;
+        liczPunkty(tura);
+        if(tura==Plansza.Wlasciciel.GRACZ1)
+            tura = Plansza.Wlasciciel.GRACZ2;
         else
-            tura = Tura.GRACZ1;
+            tura = Plansza.Wlasciciel.GRACZ1;
+    }
+    private void liczPunkty(Plansza.Wlasciciel gracz) {
+        //Rows
+        short ciag = 0;
+        for(int i=0; i<ROZMIAR; i++) {
+            for(int j=0; j<ROZMIAR; j++) {
+                if(plansza.pobierzWlasiciela(i, j)==gracz)
+                    ciag++;
+            }
+        }
     }
 }
