@@ -22,9 +22,18 @@ public class Gra {
             tura = Plansza.Wlasciciel.GRACZ1;
     }
     public int liczPunkty(Plansza.Wlasciciel gracz) {
+        int punkty=0;
+        punkty+=liczPoziomo(gracz);
+        punkty+=liczPionowo(gracz);
+        punkty+=liczLewoSkosPoczatek(gracz);
+        punkty+=liczLewoSkosKoniec(gracz);
+        punkty+=liczPrawoSkosPoczatek(gracz);
+        punkty+=liczPrawoSkosKoniec(gracz);
+        return punkty;
+    }
+    private int liczPoziomo(Plansza.Wlasciciel gracz) {
         int punkty = 0;
         boolean ciag = false;
-        //Poziomo
         for(int i=0; i<ROZMIAR; i++) {
             for(int j=0; j<ROZMIAR-1; j++) {
                 if(plansza.pobierzWlasiciela(i, j)==gracz &&
@@ -41,7 +50,11 @@ public class Gra {
             }
             ciag=false;
         }
-        //Pionowo
+        return punkty;
+    }
+    int liczPionowo(Plansza.Wlasciciel gracz) {
+        int punkty = 0;
+        boolean ciag = false;
         for(int i=0; i<ROZMIAR; i++) {
             for(int j=0; j<ROZMIAR-1; j++) {
                 if(plansza.pobierzWlasiciela(j, i)==gracz &&
@@ -58,11 +71,15 @@ public class Gra {
             }
             ciag=false;
         }
-        //Skos / do połowy
+        return punkty;
+    }
+    int liczPrawoSkosPoczatek(Plansza.Wlasciciel gracz) {
+        int punkty = 0;
+        boolean ciag = false;
         for(int i=1; i<ROZMIAR; i++) {
             for(int j=0; j<i; j++) {
                 if(plansza.pobierzWlasiciela(i-j, j)==gracz &&
-                plansza.pobierzWlasiciela(i-j-1, j+1)==gracz) {
+                        plansza.pobierzWlasiciela(i-j-1, j+1)==gracz) {
                     ciag=true;
                     punkty++;
 //                    if(i==j+1)
@@ -79,27 +96,34 @@ public class Gra {
                 punkty++;
             }
         }
-        //Skos / od połowy do końca
-        //Szuka od końca tablicy do środka bez środkowej przekątnej (jest ona liczona na górze)
+        return punkty;
+    }
+    int liczPrawoSkosKoniec(Plansza.Wlasciciel gracz) {
+        int punkty = 0;
+        boolean ciag = false;
         for(int j=ROZMIAR-2; j>0; j--){
-           for(int i=ROZMIAR-1; i>j; i--) {
-               if(plansza.pobierzWlasiciela(i, j+(ROZMIAR-1-i))==gracz &&
-                       plansza.pobierzWlasiciela(i-1, j+1+(ROZMIAR-1-i))==gracz) {
-                   ciag=true;
-                   punkty++;
-               }
-               else if(ciag) {
-                   ciag=false;
-                   punkty++;
-               }
-           }
-           //jedno dodatkowe wywolanie - jesli skonczy sie skos
+            for(int i=ROZMIAR-1; i>j; i--) {
+                if(plansza.pobierzWlasiciela(i, j+(ROZMIAR-1-i))==gracz &&
+                        plansza.pobierzWlasiciela(i-1, j+1+(ROZMIAR-1-i))==gracz) {
+                    ciag=true;
+                    punkty++;
+                }
+                else if(ciag) {
+                    ciag=false;
+                    punkty++;
+                }
+            }
+            //jedno dodatkowe wywolanie - jesli skonczy sie skos
             if(ciag) {
                 ciag=false;
                 punkty++;
             }
         }
-        //Skos \ od 6,0 do połowy
+        return punkty;
+    }
+    int liczLewoSkosPoczatek(Plansza.Wlasciciel gracz) {
+        int punkty = 0;
+        boolean ciag = false;
         for(int i=ROZMIAR-2; i>0; i--) {
             for(int j=0; j<ROZMIAR-1-i ; j++) {
                 if(plansza.pobierzWlasiciela(i+j, j)==gracz &&
@@ -117,6 +141,11 @@ public class Gra {
                 punkty++;
             }
         }
+        return punkty;
+    }
+    int liczLewoSkosKoniec(Plansza.Wlasciciel gracz) {
+        int punkty = 0;
+        boolean ciag = false;
         for(int j=0; j<ROZMIAR-1; j++) {
             for(int i=0; i<ROZMIAR-1-j; i++) {
                 if(plansza.pobierzWlasiciela(i, j+i)==gracz &&

@@ -12,8 +12,10 @@ public class OknoGry extends JFrame implements ActionListener {
 
     private int ROZMIAR = 7;
     private Gra gra;
-    private JPanel PLANSZA = new JPanel(new GridLayout(ROZMIAR, ROZMIAR));
-    JButton[][] guziki;
+    private JPanel PLANSZA = new JPanel(new GridLayout(ROZMIAR+1, ROZMIAR+1));
+    private JTextField[] panelBok;
+    private JTextField[] panelDol;
+    private JButton[][] guziki;
     private WskaznikWyniku wynik = new WskaznikWyniku();
     public OknoGry() {
         this.setSize(700, 700);
@@ -25,6 +27,8 @@ public class OknoGry extends JFrame implements ActionListener {
         //PLANSZA.setSize(900, 900);
         PLANSZA.setBounds(0, 30, 600, 600);
         this.add(PLANSZA, BorderLayout.CENTER);
+//        this.add(new NumeracjaPoziom(), BorderLayout.SOUTH);
+//        this.add(new NumeracjaPion(), BorderLayout.WEST);
         this.setVisible(true);
         gra = new Gra(ROZMIAR);
         //this.pack();
@@ -33,11 +37,16 @@ public class OknoGry extends JFrame implements ActionListener {
 
     private void stworzPlansze() {
         guziki = new JButton[ROZMIAR][ROZMIAR];
+        panelBok = new JTextField[ROZMIAR];
+        panelDol = new JTextField[ROZMIAR+1];
         int rozmiarPola = 70;
         int przerwa = 4;
         int x=0;
         int y=50;
         for(int i=0; i<ROZMIAR; i++) {
+            panelBok[i] = new KratkaNumeracja(Integer.toString(i+1));
+            panelBok[i].setEditable(false);
+            PLANSZA.add(panelBok[i]);
             for(int j=0; j<ROZMIAR; j++) {
                 guziki[i][j] = new JButton();
                 guziki[i][j].setBounds(x, y, rozmiarPola, rozmiarPola);
@@ -49,6 +58,14 @@ public class OknoGry extends JFrame implements ActionListener {
             x=0;
             y+=rozmiarPola+przerwa;
         }
+        panelDol[0] = new KratkaNumeracja();
+        panelDol[0].setEditable(false);
+        PLANSZA.add(panelDol[0]);
+        for(int i=1; i<ROZMIAR+1; i++) {
+            panelDol[i] = new KratkaNumeracja(Character.toString(i+64));
+            panelDol[i].setEditable(false);
+            PLANSZA.add(panelDol[i]);
+        }
     }
     public void actionPerformed(ActionEvent e) {
         czyTura(e);
@@ -59,7 +76,7 @@ public class OknoGry extends JFrame implements ActionListener {
                 if(e.getSource()==guziki[i][j]) {
                     wykonajTure(i, j);
                     ustawKolor(i, j);
-                    System.out.println("Tura: " + gra.czyTura(Plansza.Wlasciciel.GRACZ1));
+                    //System.out.println("Tura: " + gra.czyTura(Plansza.Wlasciciel.GRACZ1));
                 }
             }
         }
