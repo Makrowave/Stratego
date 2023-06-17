@@ -7,9 +7,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Color;
+import javax.swing.JDialog;
 
-public class OknoGry extends JFrame implements ActionListener {
-
+public class OknoGry extends JPanel implements ActionListener {
     private int ROZMIAR = 7;
     private Gra gra;
     private JPanel PLANSZA = new JPanel(new GridLayout(ROZMIAR+1, ROZMIAR+1));
@@ -17,24 +18,43 @@ public class OknoGry extends JFrame implements ActionListener {
     private JTextField[] panelDol;
     private JButton[][] guziki;
     private WskaznikWyniku wynik = new WskaznikWyniku();
-    public OknoGry() {
+    private Okno rodzic;
+    private Color kolorGracza1 = Color.BLUE;
+    private Color kolorGracza2 = Color.RED;
+    private Color[] koloryGraczy = {Color.BLUE, Color.RED};
+    public OknoGry(Okno mRodzic) {
         this.setSize(700, 700);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLayout(new BorderLayout());
+
+        JPanel przyciskiPanel = new JPanel(new FlowLayout()); // Panel dla przycisków
+        przyciskiPanel.setPreferredSize(new Dimension(700, 50));
+
+        JButton powrotZGry = new JButton("Powrót do menu");
+        rodzic = mRodzic;
+        powrotZGry.addActionListener(rodzic);
+        powrotZGry.setPreferredSize(new Dimension(150, 30));
+
+        JButton reset = new JButton("Reset");
+        reset.addActionListener(this);
+        reset.setPreferredSize(new Dimension(80, 30));
+
+        przyciskiPanel.add(powrotZGry);
+        przyciskiPanel.add(reset);
+
+        rodzic = mRodzic;
+        this.add(przyciskiPanel, BorderLayout.WEST);
         this.add(wynik, BorderLayout.NORTH);
-        //wynik.setBounds(0, 0, 200, 30);
         stworzPlansze();
-        //PLANSZA.setSize(900, 900);
-        PLANSZA.setBounds(0, 30, 600, 600);
-        this.add(PLANSZA, BorderLayout.CENTER);
-//        this.add(new NumeracjaPoziom(), BorderLayout.SOUTH);
-//        this.add(new NumeracjaPion(), BorderLayout.WEST);
-        this.setVisible(true);
+        PLANSZA.setPreferredSize(new Dimension(700, 600));
+        this.add(PLANSZA, BorderLayout.SOUTH);
         gra = new Gra(ROZMIAR);
-        //this.pack();
-
     }
-
+    public Color getKolor(int numerGracza) {
+        if (numerGracza >= 1 && numerGracza <= 2) {
+            return koloryGraczy[numerGracza - 1];
+        }
+        return null;
+    }
     private void stworzPlansze() {
         guziki = new JButton[ROZMIAR][ROZMIAR];
         panelBok = new JTextField[ROZMIAR];
@@ -68,8 +88,18 @@ public class OknoGry extends JFrame implements ActionListener {
         }
     }
     public void actionPerformed(ActionEvent e) {
-        czyTura(e);
+        if (e.getSource() instanceof JButton) {
+            JButton source = (JButton) e.getSource();
+            if (source.getText().equals("Reset")) {
+                resetujPlansze();
+            } else {
+                czyTura(e);
+            }
+        }
+
     }
+
+
     private void czyTura(ActionEvent e) {
         for(int i=0; i<ROZMIAR; i++) {
             for(int j=0; j<ROZMIAR; j++) {
@@ -83,21 +113,41 @@ public class OknoGry extends JFrame implements ActionListener {
     }
     private void wykonajTure(int x, int y) {
         if(gra.pobierzPlansze().pobierzWlasiciela(x, y) == Plansza.Wlasciciel.NIKT) {
-             if(gra.czyTura(Plansza.Wlasciciel.GRACZ1)) {
-                 gra.pobierzPlansze().ustawWlasciciela(Plansza.Wlasciciel.GRACZ1, x, y);
-                 wynik.ustawWynik(1, gra.liczPunkty(Plansza.Wlasciciel.GRACZ1));
-             }
-             else {
-                 gra.pobierzPlansze().ustawWlasciciela(Plansza.Wlasciciel.GRACZ2, x, y);
-                 wynik.ustawWynik(2, gra.liczPunkty(Plansza.Wlasciciel.GRACZ2));
-             }
-             gra.nastepnaTura();
+            if(gra.czyTura(Plansza.Wlasciciel.GRACZ1)) {
+                gra.pobierzPlansze().ustawWlasciciela(Plansza.Wlasciciel.GRACZ1, x, y);
+                wynik.ustawWynik(1, gra.liczPunkty(Plansza.Wlasciciel.GRACZ1));
+            }
+            else {
+                gra.pobierzPlansze().ustawWlasciciela(Plansza.Wlasciciel.GRACZ2, x, y);
+                wynik.ustawWynik(2, gra.liczPunkty(Plansza.Wlasciciel.GRACZ2));
+            }
+            gra.nastepnaTura();
         }
     }
     private void ustawKolor(int x, int y) {
         if(gra.pobierzPlansze().pobierzWlasiciela(x, y) == Plansza.Wlasciciel.GRACZ1)
-            guziki[x][y].setBackground(Color.RED);
+            guziki[x][y].setBackground(kolorGracza1);
         if(gra.pobierzPlansze().pobierzWlasiciela(x, y) == Plansza.Wlasciciel.GRACZ2)
-            guziki[x][y].setBackground(Color.GREEN);
+            guziki[x][y].setBackground(kolorGracza2);
+    }
+
+
+    public void resetujPlansze() {
+        gra = new Gra(ROZMIAR);
+        wynik.ustawWynik(1, 0);
+        wynik.ustawWynik(2, 0);
+
+        for (int i = 0; i < ROZMIAR; i++) {
+            for (int j = 0; j < ROZMIAR; j++) {
+                guziki[i][j].setBackground(Color.WHITE);
+            }
+        }
+    }
+    public void ustawKolorGracza1(Color kolor) {
+        kolorGracza1 = kolor;
+    }
+
+    public void ustawKolorGracza2(Color kolor) {
+        kolorGracza2 = kolor;
     }
 }
