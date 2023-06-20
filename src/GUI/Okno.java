@@ -1,12 +1,8 @@
 package GUI;
 
-import Logic.Gra;
-
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JDialog;
 
 public class Okno extends JFrame implements ActionListener {
     Menu menu;
@@ -15,35 +11,33 @@ public class Okno extends JFrame implements ActionListener {
 
     public Okno() {
         menu = new Menu(this);
-        this.add(menu);
-        menu.setVisible(true);
         gra = new OknoGry(this);
-        this.add(gra);
-        gra.setVisible(false);
         ustawienia = new Ustawienia(this, gra);
-        this.add(ustawienia);
-        ustawienia.setVisible(false);
-        this.setSize(700, 700);
+        //Ustawiam wyświetlaną zawartość
+        this.setContentPane(menu);
+        this.setSize(900, 900);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setVisible(true);
     }
+    //Przełączenie między menu, ustawieniami i grą
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() instanceof JButton && ((JButton)e.getSource()).getText().equals("Graj")) {
-            menu.setVisible(false);
+            this.setContentPane(gra);
+            this.revalidate();
             gra.setVisible(true);
         }
         if(e.getSource() instanceof JButton && ((JButton)e.getSource()).getText().equals("Powrót do menu")) {
-            gra.setVisible(false);
-            menu.setVisible(true);
+            this.setContentPane(menu);
+            this.revalidate();
         }
         if(e.getSource() instanceof JButton && ((JButton)e.getSource()).getText().equals("Ustawienia")) {
-            System.out.println("testHEHEHEHEH");
-            menu.setVisible(false);
-            ustawienia.setVisible(true);
-
+            this.setContentPane(ustawienia);
+            this.revalidate();
         }
-        }
-
     }
+    public Ustawienia pobierzUstawienia() {
+        return ustawienia;
+    }
+}
 

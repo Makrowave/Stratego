@@ -1,7 +1,7 @@
-import GUI.OknoGry;
+import GUI.Okno;
 
 public class Main {
     public static void main(String[] args) {
-        OknoGry oknoGry = new OknoGry();
+        Okno okno = new Okno();
     }
 }

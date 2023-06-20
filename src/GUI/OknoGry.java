@@ -8,20 +8,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Color;
-import javax.swing.JDialog;
 
 public class OknoGry extends JPanel implements ActionListener {
-    private int ROZMIAR = 7;
+    private final int ROZMIAR = 7;
     private Gra gra;
-    private JPanel PLANSZA = new JPanel(new GridLayout(ROZMIAR+1, ROZMIAR+1));
-    private JTextField[] panelBok;
-    private JTextField[] panelDol;
+    private final JPanel PLANSZA = new JPanel(new GridLayout(ROZMIAR+1, ROZMIAR+1));
     private JButton[][] guziki;
-    private WskaznikWyniku wynik = new WskaznikWyniku();
+    private final WskaznikWyniku wynik = new WskaznikWyniku();
     private Okno rodzic;
-    private Color kolorGracza1 = Color.BLUE;
-    private Color kolorGracza2 = Color.RED;
-    private Color[] koloryGraczy = {Color.BLUE, Color.RED};
     public OknoGry(Okno mRodzic) {
         this.setSize(700, 700);
         this.setLayout(new BorderLayout());
@@ -49,16 +43,10 @@ public class OknoGry extends JPanel implements ActionListener {
         this.add(PLANSZA, BorderLayout.SOUTH);
         gra = new Gra(ROZMIAR);
     }
-    public Color getKolor(int numerGracza) {
-        if (numerGracza >= 1 && numerGracza <= 2) {
-            return koloryGraczy[numerGracza - 1];
-        }
-        return null;
-    }
     private void stworzPlansze() {
         guziki = new JButton[ROZMIAR][ROZMIAR];
-        panelBok = new JTextField[ROZMIAR];
-        panelDol = new JTextField[ROZMIAR+1];
+        JTextField[] panelBok = new JTextField[ROZMIAR];
+        JTextField[] panelDol = new JTextField[ROZMIAR + 1];
         int rozmiarPola = 70;
         int przerwa = 4;
         int x=0;
@@ -88,8 +76,7 @@ public class OknoGry extends JPanel implements ActionListener {
         }
     }
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() instanceof JButton) {
-            JButton source = (JButton) e.getSource();
+        if (e.getSource() instanceof JButton source) {
             if (source.getText().equals("Reset")) {
                 resetujPlansze();
             } else {
@@ -106,7 +93,6 @@ public class OknoGry extends JPanel implements ActionListener {
                 if(e.getSource()==guziki[i][j]) {
                     wykonajTure(i, j);
                     ustawKolor(i, j);
-                    //System.out.println("Tura: " + gra.czyTura(Plansza.Wlasciciel.GRACZ1));
                 }
             }
         }
@@ -126,9 +112,9 @@ public class OknoGry extends JPanel implements ActionListener {
     }
     private void ustawKolor(int x, int y) {
         if(gra.pobierzPlansze().pobierzWlasiciela(x, y) == Plansza.Wlasciciel.GRACZ1)
-            guziki[x][y].setBackground(kolorGracza1);
+            guziki[x][y].setBackground(rodzic.pobierzUstawienia().pobierzKolor(1));
         if(gra.pobierzPlansze().pobierzWlasiciela(x, y) == Plansza.Wlasciciel.GRACZ2)
-            guziki[x][y].setBackground(kolorGracza2);
+            guziki[x][y].setBackground(rodzic.pobierzUstawienia().pobierzKolor(2));
     }
 
 
@@ -142,12 +128,5 @@ public class OknoGry extends JPanel implements ActionListener {
                 guziki[i][j].setBackground(Color.WHITE);
             }
         }
-    }
-    public void ustawKolorGracza1(Color kolor) {
-        kolorGracza1 = kolor;
-    }
-
-    public void ustawKolorGracza2(Color kolor) {
-        kolorGracza2 = kolor;
     }
 }
