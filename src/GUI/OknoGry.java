@@ -9,62 +9,71 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Color;
 
+import static GUI.Kolory.*;
+
 public class OknoGry extends JPanel implements ActionListener {
     private final int ROZMIAR = 7;
     private Gra gra;
-    private final JPanel PLANSZA = new JPanel(new GridLayout(ROZMIAR+1, ROZMIAR+1));
+    private final JPanel PLANSZA = new PanelKwadrat(new GridLayout(ROZMIAR+1, ROZMIAR+1));
     private JButton[][] guziki;
     private final WskaznikWyniku wynik = new WskaznikWyniku();
-    private Okno rodzic;
+    private final Okno rodzic;
     public OknoGry(Okno mRodzic) {
+        rodzic = mRodzic;
         this.setSize(700, 700);
         this.setLayout(new BorderLayout());
+        this.setBackground(kolorTla);
 
-        JPanel przyciskiPanel = new JPanel(new FlowLayout()); // Panel dla przycisków
-        przyciskiPanel.setPreferredSize(new Dimension(700, 50));
 
+        //Guzik powrot do menu
         JButton powrotZGry = new JButton("Powrót do menu");
-        rodzic = mRodzic;
+        powrotZGry.setBackground(kolorGuzika);
         powrotZGry.addActionListener(rodzic);
-        powrotZGry.setPreferredSize(new Dimension(150, 30));
+        powrotZGry.setPreferredSize(new Dimension(180, 45));
+        powrotZGry.setBackground(kolorGuzika);
+        powrotZGry.setFont(new Font("Helvetica", Font.BOLD, 16));
 
+
+        //Guzik reset
         JButton reset = new JButton("Reset");
+        reset.setBackground(kolorGuzika);
         reset.addActionListener(this);
-        reset.setPreferredSize(new Dimension(80, 30));
+        reset.setPreferredSize(new Dimension(80, 45));
+        reset.setBackground(kolorGuzika);
+        reset.setFont(new Font("Helvetica", Font.BOLD, 16));
 
+        //Dolaczenie do panelu i dolaczenie panelu do panelu z wynikiem
+        JPanel przyciskiPanel = new JPanel(new FlowLayout());
+        przyciskiPanel.setPreferredSize(new Dimension(700, 50));
         przyciskiPanel.add(powrotZGry);
         przyciskiPanel.add(reset);
+        przyciskiPanel.setBackground(kolorTla);
+        wynik.add(przyciskiPanel, BorderLayout.CENTER);
 
-        rodzic = mRodzic;
-        this.add(przyciskiPanel, BorderLayout.WEST);
-        this.add(wynik, BorderLayout.NORTH);
+        //Faktyczne stworzenie widoku
         stworzPlansze();
-        PLANSZA.setPreferredSize(new Dimension(700, 600));
-        this.add(PLANSZA, BorderLayout.SOUTH);
+        this.add(PLANSZA, BorderLayout.CENTER);
+        this.add(wynik, BorderLayout.NORTH);
         gra = new Gra(ROZMIAR);
     }
+    //Tworzy fizyczną planszę
     private void stworzPlansze() {
         guziki = new JButton[ROZMIAR][ROZMIAR];
         JTextField[] panelBok = new JTextField[ROZMIAR];
         JTextField[] panelDol = new JTextField[ROZMIAR + 1];
         int rozmiarPola = 70;
-        int przerwa = 4;
-        int x=0;
-        int y=50;
         for(int i=0; i<ROZMIAR; i++) {
             panelBok[i] = new KratkaNumeracja(Integer.toString(i+1));
             panelBok[i].setEditable(false);
+            panelBok[i].setBackground(ciemnyKolor);
             PLANSZA.add(panelBok[i]);
             for(int j=0; j<ROZMIAR; j++) {
                 guziki[i][j] = new JButton();
-                guziki[i][j].setBounds(x, y, rozmiarPola, rozmiarPola);
+                guziki[i][j].setPreferredSize(new Dimension(rozmiarPola, rozmiarPola));
                 PLANSZA.add(guziki[i][j]);
                 guziki[i][j].addActionListener(this);
-                guziki[i][j].setBackground(Color.WHITE);
-                x+=rozmiarPola+przerwa;
+                guziki[i][j].setBackground(kolorGuzika);
             }
-            x=0;
-            y+=rozmiarPola+przerwa;
         }
         panelDol[0] = new KratkaNumeracja();
         panelDol[0].setEditable(false);
@@ -77,32 +86,32 @@ public class OknoGry extends JPanel implements ActionListener {
     }
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() instanceof JButton source) {
+            //Reset
             if (source.getText().equals("Reset")) {
                 resetujPlansze();
             } else {
-                czyTura(e);
-            }
-        }
-
-    }
-
-
-    private void czyTura(ActionEvent e) {
-        for(int i=0; i<ROZMIAR; i++) {
-            for(int j=0; j<ROZMIAR; j++) {
-                if(e.getSource()==guziki[i][j]) {
-                    wykonajTure(i, j);
-                    ustawKolor(i, j);
+                //Sprawdza czy źródłem jest którykolwiek guzik z planszy
+                for(int i=0; i<ROZMIAR; i++) {
+                    for(int j=0; j<ROZMIAR; j++) {
+                        if(e.getSource()==guziki[i][j]) {
+                            wykonajTure(i, j);
+                            ustawKolor(i, j);
+                        }
+                    }
                 }
             }
         }
+
     }
     private void wykonajTure(int x, int y) {
+        //Jeżeli komórka jest pusta
         if(gra.pobierzPlansze().pobierzWlasiciela(x, y) == Plansza.Wlasciciel.NIKT) {
+            //Jeżeli tura gracza pierwszego ustaw komórkę i policz wynik
             if(gra.czyTura(Plansza.Wlasciciel.GRACZ1)) {
                 gra.pobierzPlansze().ustawWlasciciela(Plansza.Wlasciciel.GRACZ1, x, y);
                 wynik.ustawWynik(1, gra.liczPunkty(Plansza.Wlasciciel.GRACZ1));
             }
+            //To samo dla gracza 2
             else {
                 gra.pobierzPlansze().ustawWlasciciela(Plansza.Wlasciciel.GRACZ2, x, y);
                 wynik.ustawWynik(2, gra.liczPunkty(Plansza.Wlasciciel.GRACZ2));
@@ -113,7 +122,7 @@ public class OknoGry extends JPanel implements ActionListener {
     private void ustawKolor(int x, int y) {
         if(gra.pobierzPlansze().pobierzWlasiciela(x, y) == Plansza.Wlasciciel.GRACZ1)
             guziki[x][y].setBackground(rodzic.pobierzUstawienia().pobierzKolor(1));
-        if(gra.pobierzPlansze().pobierzWlasiciela(x, y) == Plansza.Wlasciciel.GRACZ2)
+        else if(gra.pobierzPlansze().pobierzWlasiciela(x, y) == Plansza.Wlasciciel.GRACZ2)
             guziki[x][y].setBackground(rodzic.pobierzUstawienia().pobierzKolor(2));
     }
 
@@ -128,5 +137,6 @@ public class OknoGry extends JPanel implements ActionListener {
                 guziki[i][j].setBackground(Color.WHITE);
             }
         }
+        gra.reset();
     }
 }

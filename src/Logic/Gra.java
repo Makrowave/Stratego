@@ -21,6 +21,13 @@ public class Gra {
         else
             tura = Plansza.Wlasciciel.GRACZ1;
     }
+    public void reset() {
+        for(int i=0; i<ROZMIAR; i++) {
+            for(int j=0; j<ROZMIAR; j++) {
+                plansza.ustawWlasciciela(Plansza.Wlasciciel.NIKT, i, j);
+            }
+        }
+    }
     public int liczPunkty(Plansza.Wlasciciel gracz) {
         int punkty=0;
         punkty+=liczPoziomo(gracz);

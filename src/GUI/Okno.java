@@ -3,6 +3,7 @@ package GUI;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 
 public class Okno extends JFrame implements ActionListener {
     Menu menu;
@@ -10,12 +11,19 @@ public class Okno extends JFrame implements ActionListener {
     Ustawienia ustawienia;
 
     public Okno() {
+        this.setTitle("Stratego");
+        //Ikona
+        URL URLIkony = getClass().getClassLoader().getResource("resource/Stratego.png");
+        if(URLIkony != null) {
+            ImageIcon ikona = new ImageIcon(URLIkony);
+            this.setIconImage(ikona.getImage());
+        }
         menu = new Menu(this);
         gra = new OknoGry(this);
-        ustawienia = new Ustawienia(this, gra);
+        ustawienia = new Ustawienia(this);
         //Ustawiam wyświetlaną zawartość
         this.setContentPane(menu);
-        this.setSize(900, 900);
+        this.setSize(810, 885);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setVisible(true);
     }
@@ -30,6 +38,7 @@ public class Okno extends JFrame implements ActionListener {
         if(e.getSource() instanceof JButton && ((JButton)e.getSource()).getText().equals("Powrót do menu")) {
             this.setContentPane(menu);
             this.revalidate();
+            gra.resetujPlansze();
         }
         if(e.getSource() instanceof JButton && ((JButton)e.getSource()).getText().equals("Ustawienia")) {
             this.setContentPane(ustawienia);

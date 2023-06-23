@@ -3,6 +3,9 @@ package GUI;
 import javax.swing.*;
 import java.awt.*;
 
+import static GUI.Kolory.kolorGuzika;
+import static GUI.Kolory.kolorTla;
+
 public class Menu extends JPanel {
     Okno rodzic;
 
@@ -15,21 +18,28 @@ public class Menu extends JPanel {
         JButton przyciskGraj = new JButton("Graj");
         przyciskGraj.addActionListener(rodzic);
         przyciskGraj.setPreferredSize(new Dimension(300, 100));
-        przyciskGraj.setBackground(Color.lightGray);
+        przyciskGraj.setBackground(kolorGuzika);
+        przyciskGraj.setFont(new Font("Helvetica", Font.BOLD, 20));
+        przyciskGraj.setFocusPainted(false);
 
         //Przycisk ustawienia
         JButton przyciskUstawienia = new JButton("Ustawienia");
         przyciskUstawienia.addActionListener(rodzic);
         przyciskUstawienia.setPreferredSize(new Dimension(300, 100));
-        przyciskUstawienia.setBackground(Color.lightGray);
+        przyciskUstawienia.setBackground(kolorGuzika);
+        przyciskUstawienia.setFont(new Font("Helvetica", Font.BOLD, 20));
+        przyciskUstawienia.setFocusPainted(false);
 
         //Przycisk wyjscie
         JButton przyciskWyjscie = new JButton("Wyjście");
         przyciskWyjscie.setPreferredSize(new Dimension(300, 100));
-        przyciskWyjscie.setBackground(Color.lightGray);
+        przyciskWyjscie.setBackground(kolorGuzika);
         przyciskWyjscie.addActionListener(e -> System.exit(0));
+        przyciskWyjscie.setFont(new Font("Helvetica", Font.BOLD, 20));
+        przyciskWyjscie.setFocusPainted(false);
 
-        this.setBackground(Color.cyan);
+        //Ustawienie przycisków - Grid Layout Manager
+        this.setBackground(kolorTla);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
